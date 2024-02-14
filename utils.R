@@ -6,6 +6,9 @@ library(pins)
 library(knitr)
 library(currr)
 library(fuzzyjoin)
+library(rvest)
+library(jsonlite)
+library(ggplot2)
 
 
 suppressMessages({
