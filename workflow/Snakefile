@@ -1,0 +1,30 @@
+configfile: "config/config.yaml"
+
+script_executor = {".py": "uv run {script}"}
+
+onerror: shell('ppo "An error occured in the workflow"')
+
+onsuccess: shell('ppo "Your workflow has completed successfully"')
+
+model_name = config["model"].replace(":", "_").lower()
+  
+# Define input and output files
+rule all:
+    input:
+        "data/fed_speeches_meta.jsonl",
+        f"data/fed_speeches_sentiment_{model_name}.json"
+
+rule scrape_fed:
+    output:
+        "data/fed_speeches_meta.jsonl",
+        "data/fed_speeches_body.jsonl"
+    script:
+        "scrape_fed.py"
+
+rule ai_sentiment:
+    input:
+        body_file = "data/fed_speeches_body.jsonl"
+    output:
+        f"data/fed_speeches_sentiment_{model_name}.json"
+    script:
+        "llm_sentiment.py"
