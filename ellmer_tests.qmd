@@ -1,0 +1,47 @@
+---
+title: Testing ellmer for texts
+format: pdf
+---
+
+```{r}
+#| include: false
+library(tidyverse)
+library(ellmer)
+```
+
+```{r}
+data <- read_rds("fed_speeches.rds")
+
+set.seed(123)
+
+examples <- data |> 
+  sample_n(10)
+
+example_texts <- examples |> 
+  pull(text) |> 
+  map_chr(str_flatten, collapse = "\n\n")
+
+# elmer
+
+chat <- chat_openai(model = "gpt-4o-mini")
+
+
+type_hawkish_sentiment <- type_object(
+  "Determine whether the central bank statement reflects a hawkish or dovish stance, considering inflation, output growth, employment, monetary policy tools, financial market stability, and global economic conditions.",
+  index = type_integer(
+    description = "Hawkish or Dovish between 0 (fully dovish) and 100 (hawkish)",  
+  )
+)
+
+example_result <- map(example_texts, ~ chat$extract_data(.x, type = type_hawkish_sentiment))
+```
+
+```{r}
+#| output: asis
+
+for (i in 1:10) {
+    cat(paste0("\n\n## Example # ", i, " sentiment: ", example_result[[i]], "\n\n"))
+    cat("\n\n")
+    cat(example_texts[i])
+}
+```

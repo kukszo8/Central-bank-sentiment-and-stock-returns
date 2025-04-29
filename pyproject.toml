@@ -1,0 +1,19 @@
+[project]
+name = "central-bank-sentiment-and-stock-returns"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bs4>=0.0.2",
+    "ipykernel>=6.29.5",
+    "ollama>=0.4.7",
+    "pydantic>=2.11.1",
+    "requests>=2.32.3",
+    "snakemake>=9.1.7",
+    "tqdm>=4.67.1",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["llmlong"]
